@@ -12,6 +12,9 @@ export default function Gnb() {
         case "/about":
             activeItem = "About";
             break;
+        case "/admin":
+            activeItem = "Admin";
+            break;
     }
 
     function goLink(e, data) {
@@ -21,6 +24,9 @@ export default function Gnb() {
                 break;
             case "About":
                 router.push("/about");
+                break;
+            case "Admin":
+                router.push("/admin");
                 break;
         }
     };
@@ -36,6 +42,13 @@ export default function Gnb() {
             <Menu.Item
                 name="About"
                 active={activeItem === 'About'}
+                onClick={goLink}
+            />
+
+
+            <Menu.Item
+                name="Admin"
+                active={activeItem === 'Admin'}
                 onClick={goLink}
             />
         </Menu>
