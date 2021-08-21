@@ -5,9 +5,21 @@ import Head from 'next/head'
 
 
 import Item from '../../src/component/Item';
+import { Loader } from "semantic-ui-react";
 
 const Post = ({ item, name }) => {
 
+    const router = useRouter();
+
+    if(router.isFallback){
+        return (
+            <div style={{padding : "100px 0"}}>
+                <Loader active inline="centered">
+                    Loading
+                </Loader>
+            </div>
+        )
+    }
     return (
         <>
         {item && (
@@ -28,12 +40,23 @@ const Post = ({ item, name }) => {
 export default Post;
 
 export async function getStaticPaths(){
+
+    const apiUrl = process.env.apiUrl;
+    const res = await Axios.get(apiUrl);
+    const data = res.data;
+  
+
     return {
-        paths: [
-            {params: {id :'740'}},
-            {params: {id :'730'}},
-            {params: {id :'729'}},
-        ],
+        // paths: [
+        //     {params: {id :'740'}},
+        //     {params: {id :'730'}},
+        //     {params: {id :'729'}},
+        // ],
+        paths: data.slice(0,9).map(item => ({
+            params : {
+                id: item.id.toString(),
+            }
+        })),
         fallback: true
     }
 }
@@ -44,7 +67,7 @@ export async function getStaticProps(context) {
     const apiUrl = `http://makeup-api.herokuapp.com/api/v1/products/${id}.json`;
     const res = await Axios.get(apiUrl);
     const data = res.data;
-
+ 
     return {
         props: {
             item: data,
